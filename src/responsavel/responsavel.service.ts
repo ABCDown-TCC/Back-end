@@ -182,7 +182,7 @@ export class ResponsavelService {
 
     const result = await this.prisma.$queryRawUnsafe(query);
 
-    return 'Responsavel editado com sucesso!';
+    return { mesnsagem: 'Responsavel editado com sucesso!', result };
   }
 
   async remove(id: number) {
