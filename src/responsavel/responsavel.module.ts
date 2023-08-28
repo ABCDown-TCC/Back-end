@@ -7,6 +7,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Module({
   imports: [PrismaModule],
   controllers: [ResponsavelController],
-  providers: [ResponsavelService,PrismaService],
+  providers: [ResponsavelService, PrismaService],
 })
 export class ResponsavelModule {}

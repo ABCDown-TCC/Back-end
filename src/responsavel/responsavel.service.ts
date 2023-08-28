@@ -67,7 +67,7 @@ export class ResponsavelService {
 
         const id = `select * from tbl_responsavel where id = LastIdResponsavel();`;
 
-        const endereco = `select * from tbl_endereco_responsavel where id_responsavel = LastIdResponsavel();`;
+        const endereco = `select * from tbl_endereco_professor where id_professor = LastIdProfessor();`;
 
         const response = await this.prisma.$queryRawUnsafe(responsavel);
         const idResponsavel = await this.prisma.$queryRawUnsafe(id);

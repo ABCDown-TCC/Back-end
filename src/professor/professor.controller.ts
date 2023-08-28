@@ -3,9 +3,9 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ProfessorService } from './professor.service';
 import { CreateProfessorDto } from './dto/create-professor.dto';
@@ -23,16 +23,16 @@ export class ProfessorController {
   }
 
   @Get()
-  findAll() {
-    return { professore: this.professorService.findAll() };
+  async findAll() {
+    return { professores: await this.professorService.findAll() };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return { professor: this.professorService.findOne(+id) };
+  async findOne(@Param('id') id: string) {
+    return { professor: await this.professorService.findOne(+id) };
   }
 
-  @Patch(':id')
+  @Put(':id')
   async update(@Param('id') id: string, @Body() body: UpdateProfessorDto) {
     const responseValidacao = await this.professorService.update(+id, body);
     if (responseValidacao == false) {

@@ -50,19 +50,13 @@ export class ProfessorService {
   async create(body: CreateProfessorDto) {
     const validacaoCpf = await this.validacaoCpf(body);
 
-    const dataNascimento = new Date(body.data_nascimento);
-    const dia = String(dataNascimento.getDate()).padStart(2, '0');
-    const mes = String(dataNascimento.getMonth() + 1).padStart(2, '0');
-    const ano = dataNascimento.getFullYear();
-    const dataFormatada = `${dia}-${mes}-${ano}`;
-
     if (validacaoCpf.length === 0) {
       const validacaoEmail = await this.validacaoEmail(body);
       if (validacaoEmail.length === 0) {
         const newProfessor = `call procInsertProfessor(
           '${body.nome}',
           '${body.cpf}',
-          '${dataFormatada}', 
+          '${body.data_nascimento}', 
           '${body.foto}',
           '${body.email}',
           '${body.senha}',
@@ -74,14 +68,14 @@ export class ProfessorService {
 
         const id = `select * from tbl_professor where id = LastIdProfessor();`;
 
-        const endereco = `select * from tbl_endereco_professor where id_responsavel = LastIdProfessor();`;
+        const endereco = `select * from tbl_endereco_professor where id_professor = LastIdProfessor();`;
 
         const response = await this.prisma.$queryRawUnsafe(newProfessor);
         const idProfessor = await this.prisma.$queryRawUnsafe(id);
         const enderecoProfessor = await this.prisma.$queryRawUnsafe(endereco);
 
         return {
-          responsavel: idProfessor,
+          professor: idProfessor,
           endereco: enderecoProfessor,
         };
       } else {
@@ -122,8 +116,7 @@ export class ProfessorService {
     INNER JOIN
         tbl_endereco_professor ON tbl_professor.id = tbl_endereco_professor.id_professor
     INNER JOIN
-        tbl_genero ON tbl_professor.id_genero = tbl_genero.id
-        order by id desc;`;
+        tbl_genero ON tbl_professor.id_genero = tbl_genero.id;`;
     const result = await this.prisma.$queryRawUnsafe(query);
     return result;
   }
