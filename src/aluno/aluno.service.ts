@@ -89,8 +89,8 @@ export class AlunoService {
     }
   }
 
-  findAll() {
-    return `This action returns all aluno`;
+  async findAll() {
+    const query = ``;
   }
 
   findOne(id: number) {
