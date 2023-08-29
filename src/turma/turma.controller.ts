@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { TurmaService } from './turma.service';
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
@@ -8,27 +16,39 @@ export class TurmaController {
   constructor(private readonly turmaService: TurmaService) {}
 
   @Post()
-  create(@Body() createTurmaDto: CreateTurmaDto) {
-    return this.turmaService.create(createTurmaDto);
+  async create(@Body() body: CreateTurmaDto) {
+    return {
+      data: await this.turmaService.create(body),
+      turma: body,
+    };
   }
 
   @Get()
-  findAll() {
-    return this.turmaService.findAll();
+  async findAll() {
+    return {
+      turmas: await this.turmaService.findAll(),
+    };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.turmaService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return {
+      turma: await this.turmaService.findOne(+id),
+    };
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTurmaDto: UpdateTurmaDto) {
-    return this.turmaService.update(+id, updateTurmaDto);
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateTurmaDto: UpdateTurmaDto,
+  ) {
+    return { data: await this.turmaService.update(+id, updateTurmaDto) };
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.turmaService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return {
+      mensagem: await this.turmaService.remove(+id),
+    };
   }
 }

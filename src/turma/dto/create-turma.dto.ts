@@ -1,12 +1,12 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateTurmaDto {
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   nome: string;
 
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   descricao: string;
 
   @IsNumber()
