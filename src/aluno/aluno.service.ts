@@ -26,7 +26,7 @@ export class AlunoService {
 
     return result;
   }
-  async validacaoEmail(body: AlunoParams) {
+  async validacaoUsuario(body: AlunoParams) {
     const query = `select id from tbl_aluno where usuario = '${body.usuario}';`;
 
     const result: [] = await this.prisma.$queryRawUnsafe(query);
@@ -45,12 +45,23 @@ export class AlunoService {
       return false;
     }
   }
+  async validacaoInsercaoTurma(id: number) {
+    const sqlValidacaoId = `select * from tbl_turma_aluno where id_aluno =${id}`;
+    const resultValidacaoId: [] =
+      await this.prisma.$queryRawUnsafe(sqlValidacaoId);
+
+    if (resultValidacaoId.length !== 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   async create(newAluno: CreateAlunoDto) {
     const validacaoCpf = await this.validacaoCpf(newAluno);
     if (validacaoCpf.length === 0) {
-      const validacaoEmail = await this.validacaoEmail(newAluno);
-      if (validacaoEmail.length === 0) {
+      const validacaoUsuario = await this.validacaoUsuario(newAluno);
+      if (validacaoUsuario.length === 0) {
         const aluno = `call procInsertAluno(
           '${newAluno.nome}',
           '${newAluno.cpf}',
@@ -90,7 +101,9 @@ export class AlunoService {
   }
 
   async findAll() {
-    const query = ``;
+    const query = `select * from tbl_aluno`;
+    const response = await this.prisma.$queryRawUnsafe(query);
+    return response;
   }
 
   findOne(id: number) {

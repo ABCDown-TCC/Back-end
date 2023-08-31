@@ -21,8 +21,8 @@ export class AlunoController {
   }
 
   @Get()
-  findAll() {
-    return this.alunoService.findAll();
+  async findAll() {
+    return { alunos: await this.alunoService.findAll() };
   }
 
   @Get(':id')
