@@ -31,7 +31,8 @@ export class TurmaService {
     const query = `call procInsertTurma(
       '${body.nome}',
       '${body.descricao}',
-      ${body.id_professor}
+      ${body.id_professor},
+      '${body.codigoTurma}'
     )`;
     const response = await this.prisma.$queryRawUnsafe(query);
     return 'Turma criada com sucesso';
@@ -42,6 +43,7 @@ export class TurmaService {
     tbl_turma.id,
     tbl_turma.nome,
     tbl_turma.descricao,
+    tbl_turma.codigo_turma,
     tbl_turma.id_professor,
     tbl_professor.nome as nomeProfessor
     
@@ -66,16 +68,16 @@ export class TurmaService {
     tbl_turma.id,
     tbl_turma.nome,
     tbl_turma.descricao,
+    tbl_turma.codigo_turma,
     tbl_turma.id_professor,
     tbl_professor.nome as nomeProfessor
     
     from tbl_turma
-    
+     
     Inner Join tbl_professor ON tbl_professor.id = tbl_turma.id_professor 
     where tbl_turma.id = ${id};`;
-    const idCadastro = `@A2KJBAWOB24920KNB39U32B${id}Y34##D93904HJHBD38`;
+
     return {
-      idCadastro,
       response: await this.prisma.$queryRawUnsafe(query),
     };
   }

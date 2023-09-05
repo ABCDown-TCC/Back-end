@@ -101,50 +101,51 @@ export class ProfessorService {
   async findAll() {
     const query = `
     SELECT
-    tbl_responsavel.id,
-    tbl_responsavel.nome,
-    tbl_responsavel.cpf,
-    DATE_FORMAT(tbl_responsavel.data_nascimento, '%d/%m/%Y'),
-    tbl_responsavel.foto,
-    tbl_responsavel.email,
-    tbl_responsavel.senha,
-    tbl_endereco_responsavel.numero,
-    tbl_endereco_responsavel.cep,
+    tbl_professor.id,
+    tbl_professor.nome,
+    tbl_professor.cpf,
+    DATE_FORMAT(tbl_professor.data_nascimento, '%d/%m/%Y') AS data_nascimento,
+    tbl_professor.foto,
+    tbl_professor.email,
+    tbl_professor.senha,
+    tbl_endereco_professor.numero,
+    tbl_endereco_professor.cep,
     tbl_genero.nome AS nome_genero,
-    tbl_telefone_responsavel.numero AS numeroResponsavel
+    tbl_telefone_professor.numero AS numeroProfessor
     FROM
-        tbl_responsavel
+        tbl_professor
     INNER JOIN
-        tbl_endereco_responsavel ON tbl_responsavel.id = tbl_endereco_responsavel.id_responsavel
+        tbl_endereco_professor ON tbl_professor.id = tbl_endereco_professor.id_professor
     INNER JOIN
-        tbl_genero ON tbl_responsavel.id_genero = tbl_genero.id
+        tbl_genero ON tbl_professor.id_genero = tbl_genero.id
     INNER JOIN
-    tbl_telefone_responsavel ON tbl_responsavel.id = tbl_telefone_responsavel.id_responsavel;`;
+        tbl_telefone_professor ON tbl_professor.id = tbl_telefone_professor.id_professor;
+`;
     const result = await this.prisma.$queryRawUnsafe(query);
     return result;
   }
 
   async findOne(id: number) {
     const query = `SELECT
-    tbl_responsavel.id,
-    tbl_responsavel.nome,
-    tbl_responsavel.cpf,
-    DATE_FORMAT(tbl_responsavel.data_nascimento, '%d/%m/%Y'),
-    tbl_responsavel.foto,
-    tbl_responsavel.email,
-    tbl_responsavel.senha,
-    tbl_endereco_responsavel.numero,
-    tbl_endereco_responsavel.cep,
+    tbl_professor.id,
+    tbl_professor.nome,
+    tbl_professor.cpf,
+    DATE_FORMAT(tbl_professor.data_nascimento, '%d/%m/%Y') AS data_nascimento,
+    tbl_professor.foto,
+    tbl_professor.email,
+    tbl_professor.senha,
+    tbl_endereco_professor.numero,
+    tbl_endereco_professor.cep,
     tbl_genero.nome AS nome_genero,
-    tbl_telefone_responsavel.numero AS numeroResponsavel
+    tbl_telefone_professor.numero AS numeroProfessor
     FROM
-        tbl_responsavel
+        tbl_professor
     INNER JOIN
-        tbl_endereco_responsavel ON tbl_responsavel.id = tbl_endereco_responsavel.id_responsavel
+        tbl_endereco_professor ON tbl_professor.id = tbl_endereco_professor.id_professor
     INNER JOIN
-        tbl_genero ON tbl_responsavel.id_genero = tbl_genero.id
+        tbl_genero ON tbl_professor.id_genero = tbl_genero.id
     INNER JOIN
-    tbl_telefone_responsavel ON tbl_responsavel.id = tbl_telefone_responsavel.id_responsavel
+        tbl_telefone_professor ON tbl_professor.id = tbl_telefone_professor.id_professor
      where tbl_professor.id = ${id}`;
 
     const result = await this.prisma.$queryRawUnsafe(query);

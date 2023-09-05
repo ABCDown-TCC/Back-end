@@ -26,6 +26,13 @@ export class AlunoService {
 
     return result;
   }
+  async validacaoCodigoTurma(body: AlunoParams) {
+    const query = `select id from tbl_aluno where cpf = '${body.cpf}';`;
+
+    const result: [] = await this.prisma.$queryRawUnsafe(query);
+
+    return result;
+  }
   async validacaoUsuario(body: AlunoParams) {
     const query = `select id from tbl_aluno where usuario = '${body.usuario}';`;
 
@@ -101,7 +108,32 @@ export class AlunoService {
   }
 
   async findAll() {
-    const query = `select * from tbl_aluno`;
+    const query = `
+    SELECT
+    tbl_aluno.id,
+    tbl_aluno.nome,
+    tbl_aluno.cpf,
+    DATE_FORMAT(tbl_aluno.data_nascimento, '%d/%m/%Y') as data_nascimento,
+    tbl_aluno.foto,
+    tbl_aluno.usuario,
+    tbl_aluno.senha,
+    tbl_responsavel.nome as nome_responsavel,
+    tbl_responsavel.email as email_responsavel,
+    tbl_genero.nome AS nome_genero,
+    tbl_telefone_responsavel.numero as numeroResponsavel,
+    tbl_turma.nome as nomeTurma,
+    tbl_turma.descricao 
+    FROM
+        tbl_aluno
+    INNER JOIN
+        tbl_responsavel ON tbl_aluno.id_responsavel = tbl_responsavel.id
+    INNER JOIN
+        tbl_genero ON tbl_responsavel.id_genero = tbl_genero.id
+    INNER JOIN
+        tbl_telefone_responsavel ON tbl_responsavel.id = tbl_telefone_responsavel.id_responsavel
+    INNER JOIN 
+        tbl_turma ON tbl_aluno.id_turma = tbl_turma.id;
+`;
     const response = await this.prisma.$queryRawUnsafe(query);
     return response;
   }
