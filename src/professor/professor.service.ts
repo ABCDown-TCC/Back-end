@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateProfessorDto } from './dto/create-professor.dto';
 import { UpdateProfessorDto } from './dto/update-professor.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
 
 interface ProfessorParams {
   nome: string;
@@ -59,7 +60,7 @@ export class ProfessorService {
           '${body.data_nascimento}', 
           '${body.foto}',
           '${body.email}',
-          '${body.senha}',
+          '${await bcrypt.hash(body.senha, 10)}',
           '${body.id_genero}',
           '${body.numero}',
           '${body.cep}',
@@ -70,13 +71,17 @@ export class ProfessorService {
 
         const endereco = `select * from tbl_endereco_professor where id_professor = LastIdProfessor();`;
 
+        const telefone = `select * from tbl_telefone_professor where id_professor = LastIdProfessor();`;
+
         const response = await this.prisma.$queryRawUnsafe(newProfessor);
         const idProfessor = await this.prisma.$queryRawUnsafe(id);
         const enderecoProfessor = await this.prisma.$queryRawUnsafe(endereco);
+        const telefoneProfessor = await this.prisma.$queryRawUnsafe(telefone);
 
         return {
           professor: idProfessor,
           endereco: enderecoProfessor,
+          telefone: telefoneProfessor,
         };
       } else {
         throw new HttpException(
@@ -162,6 +167,12 @@ export class ProfessorService {
         HttpStatus.NOT_FOUND,
       );
     }
+  }
+
+  async findEmail(email: string) {
+    const sql = `SELECT * FROM tbl_professor WHERE email = ${email}`;
+    const result = await this.prisma.$queryRawUnsafe(sql);
+    return result;
   }
 
   async update(id: number, body: UpdateProfessorDto) {

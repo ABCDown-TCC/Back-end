@@ -32,6 +32,11 @@ export class ProfessorController {
     return { professor: await this.professorService.findOne(+id) };
   }
 
+  @Get()
+  findEmail(@Param('email') email: string) {
+    return this.professorService.findEmail(email);
+  }
+
   @Put(':id')
   async update(@Param('id') id: string, @Body() body: UpdateProfessorDto) {
     const responseValidacao = await this.professorService.update(+id, body);
