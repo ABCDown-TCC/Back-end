@@ -34,7 +34,7 @@ export class ProfessorController {
 
   @Get()
   findEmail(@Param('email') email: string) {
-    return this.professorService.findEmail(email);
+    return this.professorService.findByEmail(email);
   }
 
   @Put(':id')

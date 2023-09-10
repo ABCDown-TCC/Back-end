@@ -4,7 +4,7 @@ import { UpdateProfessorDto } from './dto/update-professor.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 
-interface ProfessorParams {
+export interface ProfessorParams {
   nome: string;
   cpf: string;
   email: string;
@@ -169,10 +169,12 @@ export class ProfessorService {
     }
   }
 
-  async findEmail(email: string) {
-    const sql = `SELECT * FROM tbl_professor WHERE email = ${email}`;
-    const result = await this.prisma.$queryRawUnsafe(sql);
-    return result;
+  async findByEmail(email: string) {
+    const sql = `SELECT * FROM tbl_professor WHERE email = ?`;
+    const result = await this.prisma.$queryRawUnsafe(sql, email);
+    // Aqui, você precisa converter o resultado para o tipo desejado
+    // dependendo do que a consulta realmente retorna.
+    return result[0] || null;
   }
 
   async update(id: number, body: UpdateProfessorDto) {
