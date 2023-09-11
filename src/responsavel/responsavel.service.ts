@@ -162,6 +162,14 @@ export class ResponsavelService {
     }
   }
 
+  async findByEmail(email: string) {
+    const sql = `SELECT * FROM tbl_responsavel WHERE email = ?`;
+    const result = await this.prisma.$queryRawUnsafe(sql, email);
+    // Aqui, você precisa converter o resultado para o tipo desejado
+    // dependendo do que a consulta realmente retorna.
+    return result[0] || null;
+  }
+
   async update(id: number, body: UpdateResponsavelDto) {
     const validacaoId = await this.validacaoID(id);
     if (validacaoId == false) {

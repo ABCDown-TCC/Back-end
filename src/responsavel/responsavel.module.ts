@@ -8,5 +8,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
   imports: [PrismaModule],
   controllers: [ResponsavelController],
   providers: [ResponsavelService, PrismaService],
+  exports: [ResponsavelService],
 })
 export class ResponsavelModule {}

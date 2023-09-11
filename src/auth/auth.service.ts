@@ -1,19 +1,51 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ProfessorService } from 'src/professor/professor.service';
+import { ResponsavelService } from 'src/responsavel/responsavel.service';
 import * as bcrypt from 'bcrypt';
 import { UserPayload } from './models/userPayload';
 import { JwtService } from '@nestjs/jwt';
 import { Professor } from 'src/professor/entities/professor.entity';
+import { Responsavel } from 'src/responsavel/entities/responsavel.entity';
 import { UserToken } from './models/userToken';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly professorService: ProfessorService,
+    private readonly responsavelService: ResponsavelService,
     private readonly jwtService: JwtService,
   ) {}
-  login(user: Professor): UserToken {
-    // TRANSFORMA O USER EM JWT
+
+  async validateUser(
+    email: string,
+    password: string,
+    userType: 'professor' | 'responsavel',
+  ): Promise<Professor | Responsavel> {
+    let user: Professor | Responsavel;
+
+    if (userType === 'professor') {
+      user = await this.professorService.findByEmail(email);
+    } else if (userType === 'responsavel') {
+      user = await this.responsavelService.findByEmail(email);
+    }
+
+    if (user) {
+      console.log(user);
+
+      const isPasswordValid = await bcrypt.compare(password, user.senha);
+
+      if (isPasswordValid) {
+        return {
+          ...user,
+          senha: undefined,
+        };
+      }
+    }
+
+    throw new UnauthorizedException('E-mail ou senha estão incorretos');
+  }
+
+  login(user: Professor | Responsavel): UserToken {
     const payload: UserPayload = {
       id: user.id,
       email: user.email,
@@ -23,20 +55,5 @@ export class AuthService {
     return {
       acess_token: jwtToken,
     };
-  }
-  async validateUser(email: string, senha: string) {
-    const professor = await this.professorService.findByEmail(email);
-
-    if (professor) {
-      const isPasswordValid = await bcrypt.compare(senha, professor.senha);
-      if (isPasswordValid) {
-        return {
-          ...professor,
-          senha: undefined,
-        };
-      }
-    }
-    // Se chegar aqui, significa que não encontrou um user.
-    throw new Error('E-mail ou senha estão incorretos');
   }
 }

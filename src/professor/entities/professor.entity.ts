@@ -1,6 +1,6 @@
 export class Professor {
   id?: number;
   email: string;
-  password: string;
+  senha: string;
   name: string;
 }
