@@ -30,8 +30,7 @@ export class AuthService {
     }
 
     if (user) {
-      console.log(user);
-
+      console.log(user.tipo);
       const isPasswordValid = await bcrypt.compare(password, user.senha);
 
       if (isPasswordValid) {
@@ -45,13 +44,23 @@ export class AuthService {
     throw new UnauthorizedException('E-mail ou senha estão incorretos');
   }
 
-  login(user: Professor | Responsavel): UserToken {
+  loginProfessor(user): UserToken {
     const payload: UserPayload = {
       id: user.id,
       email: user.email,
     };
     const jwtToken = this.jwtService.sign(payload);
 
+    return {
+      acess_token: jwtToken,
+    };
+  }
+  loginResponsavel(user): UserToken {
+    const payload: UserPayload = {
+      id: user.id,
+      email: user.email,
+    };
+    const jwtToken = this.jwtService.sign(payload);
     return {
       acess_token: jwtToken,
     };

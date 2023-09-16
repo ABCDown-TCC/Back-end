@@ -1,6 +1,7 @@
 export class Professor {
-  id?: number;
+  id: number;
   email: string;
   senha: string;
   name: string;
+  tipo: 'professor';
 }

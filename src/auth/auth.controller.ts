@@ -20,13 +20,13 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   loginProfessor(@Request() req: AuthRequest) {
-    return this.authService.login(req.user);
+    return this.authService.loginProfessor(req.user);
   }
   @IsPublic()
   @Post('responsavel')
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   loginResponsavel(@Request() req: AuthRequest) {
-    return this.authService.login(req.user);
+    return this.authService.loginResponsavel(req.user);
   }
 }

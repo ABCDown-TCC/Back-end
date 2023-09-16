@@ -1,6 +1,8 @@
 import { Request } from 'express';
 import { Professor } from 'src/professor/entities/professor.entity';
+import { Responsavel } from 'src/responsavel/entities/responsavel.entity';
 
 export interface AuthRequest extends Request {
-  user: Professor;
+  professor: Professor;
+  responsavel: Responsavel;
 }
