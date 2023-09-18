@@ -13,7 +13,7 @@ import { ResponsavelModule } from 'src/responsavel/responsavel.module';
     ResponsavelModule,
     JwtModule.register({
       secret: process.env.DATABASE_URL,
-      signOptions: { expiresIn: '30d' },
+      signOptions: { expiresIn: '2d' },
     }),
   ],
   controllers: [AuthController],

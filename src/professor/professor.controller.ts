@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  Headers,
 } from '@nestjs/common';
 import { ProfessorService } from './professor.service';
 import { CreateProfessorDto } from './dto/create-professor.dto';
@@ -28,8 +29,13 @@ export class ProfessorController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return { professor: await this.professorService.findOne(+id) };
+  async findOne(
+    @Param('id') id: string,
+    @Headers('authorization') authorization: string,
+  ) {
+    return {
+      professor: await this.professorService.findOne(+id, authorization),
+    };
   }
 
   @Get()

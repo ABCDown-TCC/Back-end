@@ -3,6 +3,7 @@ import { CreateProfessorDto } from './dto/create-professor.dto';
 import { UpdateProfessorDto } from './dto/update-professor.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import {Decodificadora } from 'src/descoficadorToken';
 
 export interface ProfessorParams {
   nome: string;
@@ -102,7 +103,6 @@ export class ProfessorService {
       );
     }
   }
-
   async findAll() {
     const query = `
     SELECT
@@ -130,8 +130,13 @@ export class ProfessorService {
     return result;
   }
 
-  async findOne(id: number) {
-    const query = `SELECT
+  async findOne(id: number, token: string) {
+    const decodificador = new Decodificadora();
+
+    decodificador.decodificadorToken(token);
+
+    if (token) {
+      const query = `SELECT
     tbl_professor.id,
     tbl_professor.nome,
     tbl_professor.cpf,
@@ -153,19 +158,20 @@ export class ProfessorService {
         tbl_telefone_professor ON tbl_professor.id = tbl_telefone_professor.id_professor
      where tbl_professor.id = ${id}`;
 
-    const result = await this.prisma.$queryRawUnsafe(query);
+      const result = await this.prisma.$queryRawUnsafe(query);
 
-    const response: [] = await this.prisma.$queryRawUnsafe(query);
-    if (response.length !== 0) {
-      return result;
-    } else {
-      throw new HttpException(
-        {
-          status: HttpStatus.NOT_FOUND,
-          error: 'Professor não encontrado',
-        },
-        HttpStatus.NOT_FOUND,
-      );
+      const response: [] = await this.prisma.$queryRawUnsafe(query);
+      if (response.length !== 0) {
+        return result;
+      } else {
+        throw new HttpException(
+          {
+            status: HttpStatus.NOT_FOUND,
+            error: 'Professor não encontrado',
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
     }
   }
 
