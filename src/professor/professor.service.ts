@@ -3,7 +3,7 @@ import { CreateProfessorDto } from './dto/create-professor.dto';
 import { UpdateProfessorDto } from './dto/update-professor.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import {Decodificadora } from 'src/descoficadorToken';
+import { Decodificadora } from 'src/descoficadorToken';
 
 export interface ProfessorParams {
   nome: string;
@@ -130,12 +130,12 @@ export class ProfessorService {
     return result;
   }
 
-  async findOne(id: number, token: string) {
+  async findOne(token: string) {
     const decodificador = new Decodificadora();
 
-    decodificador.decodificadorToken(token);
+    const idUser = await decodificador.decodificadorToken(token);
 
-    if (token) {
+    if (decodificador) {
       const query = `SELECT
     tbl_professor.id,
     tbl_professor.nome,
@@ -156,7 +156,7 @@ export class ProfessorService {
         tbl_genero ON tbl_professor.id_genero = tbl_genero.id
     INNER JOIN
         tbl_telefone_professor ON tbl_professor.id = tbl_telefone_professor.id_professor
-     where tbl_professor.id = ${id}`;
+     where tbl_professor.id = ${idUser}`;
 
       const result = await this.prisma.$queryRawUnsafe(query);
 

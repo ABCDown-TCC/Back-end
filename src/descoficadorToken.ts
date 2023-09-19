@@ -13,13 +13,6 @@ export class Decodificadora {
     const [bearer, codigo] = token.split(' ');
     const decoded = (await jwt.verify(codigo, this.secretKey)) as user;
     const { id } = decoded;
-
-    console.log(id);
-
-    if (decoded) {
-      return decoded;
-    } else {
-      ('erro');
-    }
+    return id;
   }
 }

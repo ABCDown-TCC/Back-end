@@ -28,13 +28,10 @@ export class ProfessorController {
     return { professores: await this.professorService.findAll() };
   }
 
-  @Get(':id')
-  async findOne(
-    @Param('id') id: string,
-    @Headers('authorization') authorization: string,
-  ) {
+  @Get('user')
+  async findOne(@Headers('authorization') authorization: string) {
     return {
-      professor: await this.professorService.findOne(+id, authorization),
+      professor: await this.professorService.findOne(authorization),
     };
   }
 
