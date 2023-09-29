@@ -3,5 +3,4 @@ export class Responsavel {
   email: string;
   senha: string;
   name: string;
-  tipo: 'responsavel';
 }

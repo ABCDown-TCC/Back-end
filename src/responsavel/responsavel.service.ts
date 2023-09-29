@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UpdateResponsavelDto } from './dto/update-responsavel.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
 
 interface ResponsavelParams {
   nome: string;
@@ -58,7 +59,7 @@ export class ResponsavelService {
           '${createResponsavel.data_nascimento}', 
           '${createResponsavel.foto}',
           '${createResponsavel.email}',
-          '${createResponsavel.senha}',
+          '${await bcrypt.hash(createResponsavel.senha, 10)}',
           '${createResponsavel.id_genero}',
           '${createResponsavel.numero}',
           '${createResponsavel.cep}',
@@ -167,7 +168,8 @@ export class ResponsavelService {
     const result = await this.prisma.$queryRawUnsafe(sql, email);
     // Aqui, você precisa converter o resultado para o tipo desejado
     // dependendo do que a consulta realmente retorna.
-    return result[0] || null;
+
+    return result[0];
   }
 
   async update(id: number, body: UpdateResponsavelDto) {

@@ -18,6 +18,13 @@ export interface ProfessorParams {
   numeroTelefone: string;
 }
 
+export interface professorTeste {
+  id: number;
+  email: string;
+  senha?: string;
+  type?: number;
+}
+
 @Injectable()
 export class ProfessorService {
   constructor(private prisma: PrismaService) {}
@@ -180,7 +187,8 @@ export class ProfessorService {
     const result = await this.prisma.$queryRawUnsafe(sql, email);
     // Aqui, você precisa converter o resultado para o tipo desejado
     // dependendo do que a consulta realmente retorna.
-    return result[0] || null;
+
+    return result[0];
   }
 
   async update(id: number, body: UpdateProfessorDto) {

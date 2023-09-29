@@ -27,7 +27,7 @@ export class ResponsavelController {
     return { responsaveis: await this.responsavelService.findAll() };
   }
 
-  @Get(':id')
+  @Get('')
   async findOne(@Param('id') id: string) {
     return {
       responsavel: await this.responsavelService.findOne(+id),
