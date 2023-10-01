@@ -7,6 +7,8 @@ import { ProfessorModule } from './professor/professor.module';
 import { TurmaModule } from './turma/turma.module';
 import { AlunoModule } from './aluno/aluno.module';
 import { AuthModule } from './auth/auth.module';
+import { GeneroModule } from './genero/genero.module';
+import { RedefinicaoSenhaModule } from './redefinicao-senha/redefinicao-senha.module';
 
 @Module({
   controllers: [AppController],
@@ -17,6 +19,8 @@ import { AuthModule } from './auth/auth.module';
     TurmaModule,
     AlunoModule,
     AuthModule,
+    GeneroModule,
+    RedefinicaoSenhaModule,
   ],
 })
 export class AppModule {}

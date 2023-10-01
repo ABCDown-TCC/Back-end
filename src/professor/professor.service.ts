@@ -18,13 +18,6 @@ export interface ProfessorParams {
   numeroTelefone: string;
 }
 
-export interface professorTeste {
-  id: number;
-  email: string;
-  senha?: string;
-  type?: number;
-}
-
 @Injectable()
 export class ProfessorService {
   constructor(private prisma: PrismaService) {}
@@ -110,6 +103,7 @@ export class ProfessorService {
       );
     }
   }
+
   async findAll() {
     const query = `
     SELECT
