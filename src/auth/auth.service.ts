@@ -39,7 +39,7 @@ export class AuthService {
         name: name,
         id: id,
       },
-      process.env.DATABASE_URL,
+      process.env.SECRET_KEY,
       {
         expiresIn: 10000,
       },

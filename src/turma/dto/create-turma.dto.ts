@@ -9,11 +9,11 @@ export class CreateTurmaDto {
   @IsString()
   descricao: string;
 
-  @IsNotEmpty()
-  @IsString()
-  codigoTurma: string;
-
   @IsNumber()
   @IsNotEmpty()
   id_professor: number;
+
+  @IsNotEmpty()
+  @IsString()
+  codigoTurma: string;
 }

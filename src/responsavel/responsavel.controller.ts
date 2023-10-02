@@ -17,6 +17,8 @@ export class ResponsavelController {
 
   @Post()
   async create(@Body() body: CreateResponsavelDto) {
+    console.log(body);
+    
     return {
       dados: await this.responsavelService.create(body),
     };
@@ -27,7 +29,7 @@ export class ResponsavelController {
     return { responsaveis: await this.responsavelService.findAll() };
   }
 
-  @Get('')
+  @Get(':id')
   async findOne(@Param('id') id: string) {
     return {
       responsavel: await this.responsavelService.findOne(+id),

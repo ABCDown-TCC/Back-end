@@ -26,16 +26,20 @@ export class TurmaService {
     );
     if (validacaoId == false) {
       return 'Id do professor não foi econtrado';
-    }
-
-    const query = `call procInsertTurma(
+    } else {
+      const query = `call procInsertTurma(
       '${body.nome}',
       '${body.descricao}',
       ${body.id_professor},
       '${body.codigoTurma}'
     )`;
-    const response = await this.prisma.$queryRawUnsafe(query);
-    return 'Turma criada com sucesso';
+      const response = await this.prisma.$queryRawUnsafe(query);
+      if (response) {
+        return 'Turma criada com sucesso';
+      } else {
+        return 'Não foi possível criar a turma;';
+      }
+    }
   }
 
   async findAll() {
@@ -87,11 +91,13 @@ export class TurmaService {
     if (validacaoIdTurma == false) {
       return `Não foi encontrado nenhum registro de turma com este ID: ${id} `;
     }
+
     const query = `call procUpdateTurma(
       ${id},
       '${body.nome}',
       '${body.descricao}',
-      ${body.id_professor}
+      ${body.id_professor},
+      '${body.codigoTurma}'
       );`;
     const response = await this.prisma.$queryRawUnsafe(query);
     return 'Registro de turma atualizado com suscesso!';
@@ -102,7 +108,10 @@ export class TurmaService {
     if (validacaoIdTurma == false) {
       return `Não foi encontrado nenhum registro de turma com este ID: ${id} `;
     }
-    const query = `call procprocDeleteTurma(${id});`;
-    return 'Registro de turma deletado com sucesso!';
+    const query = `call procDeleteTurma(${id});`;
+    const result = await this.prisma.$queryRawUnsafe(query);
+    return {
+      message: 'Registro de turma deletado com sucesso!',
+    };
   }
 }
