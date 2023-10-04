@@ -29,6 +29,7 @@ export class ProfessorService {
 
     return result;
   }
+
   async validacaoEmail(body: ProfessorParams) {
     const query = `select id from tbl_professor where email = '${body.email}';`;
 
@@ -48,7 +49,7 @@ export class ProfessorService {
       return false;
     }
   }
-
+  
   async create(body: CreateProfessorDto) {
     const validacaoCpf = await this.validacaoCpf(body);
 
@@ -73,7 +74,6 @@ export class ProfessorService {
         const endereco = `select * from tbl_endereco_professor where id_professor = LastIdProfessor();`;
 
         const telefone = `select * from tbl_telefone_professor where id_professor = LastIdProfessor();`;
-
         const response = await this.prisma.$queryRawUnsafe(newProfessor);
         const idProfessor = await this.prisma.$queryRawUnsafe(id);
         const enderecoProfessor = await this.prisma.$queryRawUnsafe(endereco);
@@ -176,6 +176,24 @@ export class ProfessorService {
     }
   }
 
+  async findEmail(email: string){
+    const query = `select * from tbl_professor where email = ${email}`
+    const resultQuery = await this.prisma.$queryRawUnsafe(query);
+    let result = {}
+
+    if(resultQuery){
+      result = {
+        message: 'Professor encontrado com sucesso',
+        status: HttpStatus.OK
+        }
+      } else{
+        result = {
+          message: 'Professor não encontrado',
+          status: HttpStatus.INTERNAL_SERVER_ERROR
+      }
+    }      
+  }
+  
   async findByEmail(email: string) {
     const sql = `SELECT * FROM tbl_professor WHERE email = ?`;
     const result = await this.prisma.$queryRawUnsafe(sql, email);

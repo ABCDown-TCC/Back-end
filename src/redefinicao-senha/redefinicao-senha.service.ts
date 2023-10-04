@@ -3,6 +3,7 @@ import * as nodemailer from 'nodemailer';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { ProfessorService } from 'src/professor/professor.service';
 
 interface Professor {
   id: number;
@@ -20,9 +21,19 @@ export class RedefinicaoSenhaService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
+    private readonly professorService : ProfessorService
   ) {}
 
   private tokenCache: { [email: string]: string } = {};
+
+  
+  gerarNumeroAleatorio() {
+    const token = Math.floor(Math.random() * 9000) + 1000;
+
+    return token;
+  }
+
+  
 
   // Este método gera um token de 4 dígitos aleatório
   private gerarToken(email: string): string {
@@ -38,8 +49,8 @@ export class RedefinicaoSenhaService {
     return token;
   }
 
-  async enviarTokenPorEmail(email: string): Promise<string> {
-    const token = this.gerarToken(email);
+  async enviarTokenPorEmail(email: string): Promise<number> {
+    const token = this.gerarNumeroAleatorio();
 
     const transporter = nodemailer.createTransport({
       service: 'Gmail', // ou qualquer outro serviço de e-mail
@@ -56,7 +67,7 @@ export class RedefinicaoSenhaService {
     };
 
     await transporter.sendMail(mailOptions);
-
+    
     return token;
   }
 
