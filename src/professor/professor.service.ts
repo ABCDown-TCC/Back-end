@@ -177,15 +177,14 @@ export class ProfessorService {
   }
 
   async findEmail(email: string){
-    const query = `select * from tbl_professor where email = ${email}`
+    const query = `select * from tbl_professor where email = '${email}'`
     const resultQuery = await this.prisma.$queryRawUnsafe(query);
     let result = {}
 
+    
     if(resultQuery){
-      result = {
-        message: 'Professor encontrado com sucesso',
-        status: HttpStatus.OK
-        }
+      
+        return resultQuery[0]
       } else{
         result = {
           message: 'Professor não encontrado',
@@ -215,7 +214,7 @@ export class ProfessorService {
      '${body.data_nascimento}', 
      '${body.foto}',
      '${body.email}',
-     '${body.senha}',
+     '${await bcrypt.hash(body.senha, 10)}',
      ${body.id_genero},
      '${body.numero}',
      '${body.cep}',

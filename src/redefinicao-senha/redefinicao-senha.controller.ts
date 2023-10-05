@@ -16,9 +16,11 @@ export class RedefinicaoSenhaController {
 
   @Post('confirmar')
   async confirmarRedefinicaoSenha(
-    @Body() body: { email: string; token: string; novaSenha: string },
+    @Body() body: { email: string; token: number; novaSenha: string },
   ): Promise<void> {
     const { email, token, novaSenha } = body;
+    console.log(novaSenha);
+    
 
     await this.redefinicaoSenha.redefinirSenha(email, token, novaSenha);
   }
